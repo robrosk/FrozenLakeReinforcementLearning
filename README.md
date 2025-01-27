@@ -13,7 +13,6 @@ Experience replay is implemented to stabilize training.
 
 ϵ-greedy policy ensures a balance between exploration and exploitation.
 
-Environment
 The environment is a 4x4 grid world:
 
 Each state corresponds to a position on the grid.
