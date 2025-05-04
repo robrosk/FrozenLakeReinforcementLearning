@@ -1,33 +1,104 @@
-# FrozenLakeReinforcementLearning
+# Frozen Lake Reinforcement Learning
 
-Overview
-This project implements a custom version of the Frozen Lake environment and uses Reinforcement Learning (RL) with two neural networks to solve it. Frozen Lake is a classic RL problem where the agent navigates a grid world, avoiding "holes" and reaching the goal.
+This project implements a Deep Q-Network (DQN) agent to solve the Frozen Lake environment. The environment consists of a 4x4 grid where the agent needs to navigate from the start position to the goal while avoiding holes.
 
-In this implementation, both the environment and the RL solution are built from scratch without relying on existing libraries like OpenAI Gym.
+The original implementation was developed in Jupyter notebooks. The code has since been refactored into Python modules with proper classes for improved modularity and reusability.
 
-Features
-Custom Environment: A fully custom implementation of the Frozen Lake environment, including state transitions and reward structure.
-Deep Q-Network (DQN):
-Two neural networks (Main Q-Network and Target Q-Network) are used to predict and update Q-values.
-Experience replay is implemented to stabilize training.
+## Project Structure
 
-ϵ-greedy policy ensures a balance between exploration and exploitation.
+- `environment.py`: Contains the Environment class for the Frozen Lake environment
+- `replay_buffer.py`: Implements the ReplayBuffer class for experience replay
+- `agent.py`: Defines the DQNAgent class with the neural network for Q-learning
+- `train.py`: Contains training and testing logic
+- `main.py`: Entry point for the application
 
-The environment is a 4x4 grid world:
+## Features
 
-Each state corresponds to a position on the grid.
-The agent starts at the top-left corner and must navigate to the goal at the bottom-right corner.
-Some grid tiles are "holes" that end the episode with no reward.
-Reinforcement Learning
-The RL agent uses a Deep Q-Network (DQN):
+- Deep Q-Network (DQN) implementation with TensorFlow
+- Custom environment built from scratch
+- Experience replay for efficient learning
+- Target network for stable training
 
-Main Q-Network:
-Predicts Q-values for all possible actions given a state.
-Used during training to take actions and compute gradients.
-Target Q-Network:
-Stabilizes learning by providing fixed Q-value targets for a period of training steps.
-Periodically updated to match the weights of the Main Q-Network.
-Training
-Experience Replay: The agent stores its experiences (state, action, reward, next state, done) in a replay buffer and samples batches for training.
-Loss Function: Mean squared error between predicted Q-values and target Q-values.
-Optimization: Weights are updated using gradient descent with the Adam optimizer.
+## Installation
+
+1. Clone the repository:
+```
+git clone https://github.com/yourusername/frozen-lake-rl.git
+cd frozen-lake-rl
+```
+
+2. Install the required packages in a virtual environment:
+```
+# Create and activate a virtual environment
+python -m venv venv
+# On Windows
+venv\Scripts\activate
+# On Linux/Mac
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Training
+
+To train a new agent:
+
+```
+python main.py --episodes 1000 --max-steps 100
+```
+
+Training parameters:
+- `--episodes`: Number of episodes to train (default: 1000)
+- `--max-steps`: Maximum steps per episode (default: 100)
+- `--learning-rate`: Learning rate for the agent (default: 0.001)
+- `--gamma`: Discount factor (default: 0.99)
+- `--epsilon`: Initial exploration rate (default: 1.0)
+- `--epsilon-decay`: Exploration rate decay (default: 0.995)
+- `--epsilon-min`: Minimum exploration rate (default: 0.01)
+- `--batch-size`: Batch size for training (default: 64)
+- `--update-target-every`: Update target network every N steps (default: 100)
+
+The trained model will be saved to `models/dqn_final.h5`.
+
+### Testing
+
+To test a trained agent:
+
+```
+python main.py --test --model models/dqn_final.h5
+```
+
+Testing parameters:
+- `--test`: Flag to indicate testing mode
+- `--model`: Path to the trained model (default: models/dqn_final.h5)
+- `--test-episodes`: Number of test episodes (default: 5)
+- `--render`: Flag to render the environment during testing
+
+## Environment
+
+The Frozen Lake environment is a 4x4 grid:
+- S: Start position (0,0)
+- F: Frozen surface (safe)
+- H: Hole (terminates episode with negative reward)
+- G: Goal (terminates episode with positive reward)
+
+It's a stochastic environment, where the agent has a 20% chance of slipping to a random direction regardless of the chosen action.
+
+## Agent
+
+The agent uses a Deep Q-Network with the following features:
+- Experience replay for more efficient learning
+- Target network to stabilize training
+- Epsilon-greedy exploration strategy
+
+## Troubleshooting
+
+If you encounter issues with TensorFlow installation:
+1. Make sure you're using a compatible Python version (3.6-3.9 work best with TensorFlow)
+2. You can try installing a specific version: `pip install tensorflow==2.8.0`
+3. If you're on Windows, ensure you have the Microsoft Visual C++ Redistributable installed
+4. Consider using a CPU-only version if you don't have a compatible GPU: `pip install tensorflow-cpu`
+
